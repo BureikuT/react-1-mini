@@ -3,54 +3,61 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      friends: [],
-      picture: '',
-      name: ''
-    };
+  constructor(){
+    super()
+    this.state={
+      picture:'',
+      name:'',
+      friends:[]
+    }
   }
 
-  updatePicture( value ) {
-    this.setState({ picture: value });
+  handlePictureChange=(e)=>{
+    this.setState({picture: e.target.value})
   }
 
-  updateName( value ) {
-    this.setState({ name: value });
+  handleNameChange=(e)=>{
+    this.setState({name: e.target.value})
   }
 
-  addFriend() {
-    const { friends, picture, name } = this.state;
+  handleAddFriend=()=>{
+    //destructoring to get 3 var off state
+    const {friends,picture,name} = this.state;
+    // making a copy of the friends array so we dont mutate state
+    let friendsCopy = friends.slice()
+    //pushing a new Object to the copy array, the object
+    //has two keys: name and picture
+    friendsCopy.push({name,picture})
 
-    let newFriends = friends.slice();
-    newFriends.push({ picture, name });
 
-    this.setState({ friends: newFriends, picture: '', name: '' });
+    this.setState({friends:friendsCopy})
   }
 
-  render() {
-    const friends = this.state.friends.map( ( friend, index ) => (
-      <div key={ `friend-${ index }-${ friend.name }` }>
-        <img width="100px" src={ friend.picture } />
-        <span>{ friend.name }</span>
+  render(){
+    return(
+      
+        <div className='container'>
+        <div>
+        <label>Picture:</label>
+        <input onChange={this.handlePictureChange}/>
+        
+        </div>
+        <div>
+        <label>Name:</label>
+        <input onChange={this.handleNameChange}/>
+        </div>
+        <button onClick={this.handleAddFriend}> Add Friend</button>
+        <div>
+          {this.state.friends.map(friend=>{
+          return (
+            <div>
+              <h3>Name: {friend.name}</h3>
+              <img src={friend.picture}/>
+              </div>
+          )})}
+        </div>
       </div>
-    ));
-
-    return (
-      <div>
-        <span>Picture:</span>
-        <input onChange={ ( e ) => this.updatePicture( e.target.value ) } value={ this.state.picture } />
-
-        <span>Name:</span>
-        <input onChange={ ( e ) => this.updateName( e.target.value ) } value={ this.state.name } />
-
-        <button onClick={ () => this.addFriend() }>Add Friend</button>
-
-        { friends }
-      </div>
-    );
+    )
   }
 }
 
